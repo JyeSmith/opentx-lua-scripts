@@ -6,7 +6,7 @@
 
 local minVoltage = 14.4 -- minimum voltage before announcment
 local delayTimeInSeconds = 6.0 -- delay in seconds between announcments
-local sagTimeInSeconds = 4.0 -- delay in seconds between announcments
+local sagTimeInSeconds = 4.0 -- delay in seconds before announcment after dropping below minVoltage
 
 -- DON'T EDIT BELOW THIS LINE --
 
@@ -33,14 +33,11 @@ local function bg_func()
     
     battVolts = round(getValue("VFAS"), 1)
     
-    if battVolts <= minVoltage and getTime() > (timeOfLastAnnouncment + (delayTimeInSeconds * 100)) then
-      if timeBelowMinVoltage == 0 then 
-        timeBelowMinVoltage = getTime()
-      end
-      if getTime() > (timeBelowMinVoltage + (sagTimeInSeconds * 100)) then
-        playNumber(battVolts*10, unitVolts, PREC1)
-        timeOfLastAnnouncment = getTime()
-      end
+    if battVolts <= minVoltage and getTime() > timeOfLastAnnouncment and getTime() > timeBelowMinVoltage then
+      playNumber(battVolts*10, unitVolts, PREC1)
+      timeOfLastAnnouncment = getTime() + delayTimeInSeconds * 100
+    elseif battVolts <= minVoltage and timeBelowMinVoltage == 0 then
+      timeBelowMinVoltage = getTime() + sagTimeInSeconds * 100
     elseif battVolts > minVoltage then
       timeBelowMinVoltage = 0
     end -- delay
@@ -54,12 +51,10 @@ local function run_func(event)
   
   lcd.clear()  
 	
-  if rssi > 0 then
-    if battVolts <= minVoltage then
-      lcd.drawText(25, 15, battVolts, XXLSIZE + BLINK )
-    else 
-      lcd.drawText(25, 15, battVolts, XXLSIZE )
-    end
+  if rssi > 0 and battVolts <= minVoltage then
+    lcd.drawText(25, 15, battVolts, XXLSIZE + BLINK )
+  elseif rssi > 0 and battVolts > minVoltage then
+    lcd.drawText(25, 15, battVolts, XXLSIZE )
   else
     lcd.drawText(25, 15, "00.0", XXLSIZE )
   end
