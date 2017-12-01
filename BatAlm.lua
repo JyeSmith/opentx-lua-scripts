@@ -11,9 +11,8 @@ local sagTimeInSeconds = 4.0 -- delay in seconds before announcment after droppi
 -- DON'T EDIT BELOW THIS LINE --
 
 local unitVolts = 1 -- Sets voltage units to be announced
-local battVolts = 0
+local battVolts = 999
 local timeOfLastAnnouncment = 0
-local timeBelowMinVoltage = 0
 local rssi, alarm_low, alarm_crit = getRSSI()
 
 function round(num, numDecimalPlaces)
@@ -32,14 +31,13 @@ local function bg_func()
   if rssi > 0 then
     
     battVolts = round(getValue("VFAS"), 1)
+    currentTime = getTime()
     
-    if battVolts <= minVoltage and getTime() > timeOfLastAnnouncment and getTime() > timeBelowMinVoltage then
+    if battVolts <= minVoltage and currentTime > timeOfLastAnnouncment then
+      timeOfLastAnnouncment = currentTime + delayTimeInSeconds * 100
       playNumber(battVolts*10, unitVolts, PREC1)
-      timeOfLastAnnouncment = getTime() + delayTimeInSeconds * 100
-    elseif battVolts <= minVoltage and timeBelowMinVoltage == 0 then
-      timeBelowMinVoltage = getTime() + sagTimeInSeconds * 100
     elseif battVolts > minVoltage then
-      timeBelowMinVoltage = 0
+      timeOfLastAnnouncment = currentTime + sagTimeInSeconds * 100
     end -- delay
   
   end -- getRSSI()
@@ -49,14 +47,15 @@ end
 local function run_func(event)
   -- run_func is called periodically only when screen is visible
   
-  lcd.clear()  
-	
+  lcd.clear()
+  
   if rssi > 0 and battVolts <= minVoltage then
-    lcd.drawText(25, 15, battVolts, XXLSIZE + BLINK )
+    lcd.drawText(22, 15, battVolts, XXLSIZE + BLINK )
   elseif rssi > 0 and battVolts > minVoltage then
-    lcd.drawText(25, 15, battVolts, XXLSIZE )
+    lcd.drawText(22, 15, battVolts, XXLSIZE )
   else
-    lcd.drawText(25, 15, "00.0", XXLSIZE )
+    lcd.drawText(43, 20, "RSSI = " .. rssi, LSIZE )
+    lcd.drawText(22, 35, "Plug in the Quad!", LSIZE )
   end
 
 end
