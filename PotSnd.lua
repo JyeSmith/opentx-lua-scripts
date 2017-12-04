@@ -2,7 +2,7 @@
 -- https://github.com/jyesmith/opentx-lua-scripts
 -- By Jye Smith
 
-WARNING - UNTESTED! THIS MESSAGE WILL BE REMOVED ONCE TESTED.
+-- WARNING - UNTESTED! THIS MESSAGE WILL BE REMOVED ONCE TESTED.
 
 local function run(event)
 
