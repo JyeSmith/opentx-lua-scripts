@@ -5,11 +5,14 @@
 -- CONFIG --
 
 local minVoltage = 14.4 -- minimum voltage before announcment
+local minVoltage3s = 10.8 -- minimum voltage for 3s
+local minVoltage4s = 14.4 -- minimum voltage for 4s
 local delayTimeInSeconds = 6.0 -- delay in seconds between announcments
 local sagTimeInSeconds = 4.0 -- delay in seconds before announcment after dropping below minVoltage
 
 -- DON'T EDIT BELOW THIS LINE --
 
+local bateryCellCount = '4s'
 local unitVolts = 1 -- Sets voltage units to be announced
 local battVolts = 999
 local timeOfLastAnnouncment = 0
@@ -47,6 +50,18 @@ end
 local function run_func(event)
   -- run_func is called periodically only when screen is visible
   
+  if event == EVT_ENTER_BREAK then
+    if bateryCellCount == '4s' then
+      bateryCellCount = '3s'
+      minVoltage = minVoltage3s
+      playFile("3sbat.wav")
+    elseif bateryCellCount == '3s' then
+      bateryCellCount = '4s'
+      minVoltage = minVoltage4s
+      playFile("4sbat.wav")
+    end
+  end
+  
   lcd.clear()
   
   if rssi > 0 and battVolts <= minVoltage then
@@ -57,6 +72,8 @@ local function run_func(event)
     lcd.drawText(43, 20, "RSSI = " .. rssi, LSIZE )
     lcd.drawText(22, 35, "Plug in the Quad!", LSIZE )
   end
+
+  lcd.drawText(115, 55, bateryCellCount, LSIZE )
 
 end
 
