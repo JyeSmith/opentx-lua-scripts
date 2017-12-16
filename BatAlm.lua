@@ -4,7 +4,6 @@
 
 -- CONFIG --
 
-local minVoltage = 14.4 -- minimum voltage before announcment
 local minVoltage3s = 10.8 -- minimum voltage for 3s
 local minVoltage4s = 14.4 -- minimum voltage for 4s
 local delayTimeInSeconds = 6.0 -- delay in seconds between announcments
@@ -13,6 +12,7 @@ local sagTimeInSeconds = 4.0 -- delay in seconds before announcment after droppi
 -- DON'T EDIT BELOW THIS LINE --
 
 local bateryCellCount = '4s'
+local minVoltage = minVoltage4s
 local unitVolts = 1 -- Sets voltage units to be announced
 local battVolts = 999
 local timeOfLastAnnouncment = 0
