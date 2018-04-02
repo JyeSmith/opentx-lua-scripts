@@ -25,8 +25,11 @@ https://github.com/betaflight/betaflight-tx-lua-scripts
 OpenTX Simulation how to
 https://www.youtube.com/watch?time_continue=112&v=emzo0jN-x9A
 
-Text to speech for custom sounds. Download in mp3 and use ffmpeg to convert to wav.
+Text to speech for custom sounds.
 https://text-to-speech-demo.ng.bluemix.net/
+
+Online mp3 to wav convertion
+https://convertio.co/mp3-converter/
 
 Online lua test
 http://codepad.org
