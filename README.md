@@ -28,8 +28,11 @@ https://www.youtube.com/watch?time_continue=112&v=emzo0jN-x9A
 Text to speech for custom sounds.
 https://text-to-speech-demo.ng.bluemix.net/
 
-Online mp3 to wav convertion
-https://convertio.co/mp3-converter/
+ffmpeg mp3 to wav convertion
+
+```
+ffmpeg -i song.mp3 -acodec pcm_s16le -ar 8000 -ac 1 song.wav
+```
 
 Online lua test
 http://codepad.org
